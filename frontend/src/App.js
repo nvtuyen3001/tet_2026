@@ -198,6 +198,9 @@ function App() {
   const [showMenu, setShowMenu] = useState(false);
   const [player, setPlayer] = useState(null);
   const [selectedHoliday, setSelectedHoliday] = useState("lunarNewYear");
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   
   // Lấy playlist dựa trên loại lễ
   const currentPlaylist = holidays[selectedHoliday].type === "christmas" 
@@ -248,17 +251,48 @@ function App() {
   // YouTube player ready
   const onPlayerReady = (event) => {
     setPlayer(event.target);
+    setDuration(event.target.getDuration());
   };
 
+  // Update progress
+  useEffect(() => {
+    if (!player || !isPlaying || isDragging) return;
+
+    const updateProgress = () => {
+      if (player && player.getCurrentTime) {
+        const current = player.getCurrentTime();
+        const total = player.getDuration();
+        setCurrentTime(current);
+        setDuration(total);
+      }
+    };
+
+    const interval = setInterval(updateProgress, 1000);
+    return () => clearInterval(interval);
+  }, [player, isPlaying, isDragging]);
+
   // Handle play/pause
-  const togglePlayPause = () => {
+  const togglePlayPause = async () => {
     if (!player) return;
-    if (isPlaying) {
-      player.pauseVideo();
-      setIsPlaying(false);
-    } else {
-      player.playVideo();
-      setIsPlaying(true);
+    
+    try {
+      if (isPlaying) {
+        player.pauseVideo();
+        setIsPlaying(false);
+      } else {
+        // Thêm user interaction để kích hoạt audio trên mobile
+        await player.playVideo();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.log("Playback error:", error);
+      // Fallback: thử play lại sau một chút
+      setTimeout(() => {
+        if (player && !isPlaying) {
+          player.playVideo();
+          setIsPlaying(true);
+        }
+      }, 100);
     }
   };
 
@@ -267,7 +301,57 @@ function App() {
     setCurrentTrack(index);
     setShowPlaylist(false);
     setIsPlaying(true);
+    setCurrentTime(0);
+    setDuration(0);
   };
+
+  // Format time helper
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Handle seek
+  const handleSeek = (e) => {
+    if (!player || !duration) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percentage = clickX / rect.width;
+    const seekTime = percentage * duration;
+    
+    player.seekTo(seekTime);
+    setCurrentTime(seekTime);
+  };
+
+  // Handle progress bar drag
+  const handleProgressMouseDown = (e) => {
+    setIsDragging(true);
+    handleSeek(e);
+  };
+
+  const handleProgressMouseMove = (e) => {
+    if (!isDragging) return;
+    handleSeek(e);
+  };
+
+  const handleProgressMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Add mouse event listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleProgressMouseMove);
+      document.addEventListener('mouseup', handleProgressMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleProgressMouseMove);
+        document.removeEventListener('mouseup', handleProgressMouseUp);
+      };
+    }
+  }, [isDragging]);
 
   // Previous track
   const previousTrack = () => {
@@ -292,12 +376,21 @@ function App() {
     }
   };
 
-  // YouTube player options
+  // YouTube player options - Sửa để hoạt động trên mobile
   const opts = {
     height: "0",
     width: "0",
     playerVars: {
-      autoplay: 1,
+      autoplay: 0, // Tắt autoplay để tránh vấn đề trên mobile
+      controls: 0,
+      disablekb: 1,
+      enablejsapi: 1,
+      fs: 0,
+      iv_load_policy: 3,
+      modestbranding: 1,
+      playsinline: 1, // Quan trọng cho iOS
+      rel: 0,
+      showinfo: 0,
     },
   };
 
@@ -369,6 +462,46 @@ function App() {
             <div className="track-info">
               <div className="track-title" data-testid="track-title">{currentPlaylist[currentTrack].title}</div>
               <div className="track-artist" data-testid="track-artist">{currentPlaylist[currentTrack].artist}</div>
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="progress-section">
+            <div className="time-display">
+              <span className="current-time">{formatTime(currentTime)}</span>
+              <span className="duration">{formatTime(duration)}</span>
+            </div>
+            <div 
+              className="progress-bar-container"
+              onMouseDown={handleProgressMouseDown}
+              onClick={handleSeek}
+              onTouchStart={handleProgressMouseDown}
+              onTouchMove={(e) => {
+                e.preventDefault();
+                if (isDragging && e.touches[0]) {
+                  const touch = e.touches[0];
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickX = touch.clientX - rect.left;
+                  const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+                  const seekTime = percentage * duration;
+                  if (player && duration) {
+                    player.seekTo(seekTime);
+                    setCurrentTime(seekTime);
+                  }
+                }
+              }}
+              onTouchEnd={() => setIsDragging(false)}
+            >
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill"
+                  style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                />
+                <div 
+                  className="progress-thumb"
+                  style={{ left: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                />
+              </div>
             </div>
           </div>
 
