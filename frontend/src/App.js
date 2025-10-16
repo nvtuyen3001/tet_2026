@@ -3,9 +3,9 @@ import "./App.css";
 import axios from "axios";
 import YouTube from "react-youtube";
 import { Play, Pause, SkipBack, SkipForward, List, Calendar } from "lucide-react";
+import config from "./config";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const API = `${config.API_BASE_URL}/api`;
 
 // Các mốc thời gian
 const holidays = {
