@@ -193,7 +193,7 @@ function App() {
 
   // Previous track
   const previousTrack = () => {
-    const newIndex = currentTrack === 0 ? playlist.length - 1 : currentTrack - 1;
+    const newIndex = currentTrack === 0 ? currentPlaylist.length - 1 : currentTrack - 1;
     changeTrack(newIndex);
   };
 
