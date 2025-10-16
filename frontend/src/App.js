@@ -63,6 +63,84 @@ const tetPlaylist = [
     title: "Đi Về Nhà",
     artist: "Nhạc Xuân 2025",
     thumbnail: "https://img.youtube.com/vi/vTJdVE_gjI0/hqdefault.jpg"
+  },
+  {
+    id: "ekMxrFeZb-0",
+    title: "Năm Qua Tôi Đã Làm Gì",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/ekMxrFeZb-0/hqdefault.jpg"
+  },
+  {
+    id: "Qc1GxHNRRn4",
+    title: "Đi Để Trở Về",
+    artist: "Nhạc Xuân",
+    thumbnail: "https://img.youtube.com/vi/Qc1GxHNRRn4/hqdefault.jpg"
+  },
+  {
+    id: "d7k0FsVLB6E",
+    title: "Tết Tết Tết Tết Đến Rồi",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/d7k0FsVLB6E/hqdefault.jpg"
+  },
+  {
+    id: "g20JODoyHTA",
+    title: "Như Hoa Mùa Xuân",
+    artist: "Nhạc Xuân",
+    thumbnail: "https://img.youtube.com/vi/g20JODoyHTA/hqdefault.jpg"
+  },
+  {
+    id: "QLfzXiKREFM",
+    title: "Ngày Xuân Lòng Phụng Sụm Vay",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/QLfzXiKREFM/hqdefault.jpg"
+  },
+  {
+    id: "A-7t7DrKHsc",
+    title: "Tết Là Tết",
+    artist: "Nhạc Xuân",
+    thumbnail: "https://img.youtube.com/vi/A-7t7DrKHsc/hqdefault.jpg"
+  },
+  {
+    id: "kDmOOj5Y0DI",
+    title: "Chuyện Cũ Bỏ Qua",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/kDmOOj5Y0DI/hqdefault.jpg"
+  },
+  {
+    id: "18lVcz3wkWw",
+    title: "Mùa Xuân Ơi",
+    artist: "Nhạc Xuân",
+    thumbnail: "https://img.youtube.com/vi/18lVcz3wkWw/hqdefault.jpg"
+  },
+  {
+    id: "mMobsXN6SPY",
+    title: "Đoàn Xuân Ca",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/mMobsXN6SPY/hqdefault.jpg"
+  },
+  {
+    id: "VnpdsO4n3Yw",
+    title: "Phố Xuân",
+    artist: "Nhạc Xuân",
+    thumbnail: "https://img.youtube.com/vi/VnpdsO4n3Yw/hqdefault.jpg"
+  },
+  {
+    id: "myH0HIZNRiE",
+    title: "Con Bướm Xuân",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/myH0HIZNRiE/hqdefault.jpg"
+  },
+  {
+    id: "OhXXsCpv0JI",
+    title: "Xuân Phát Tài",
+    artist: "Nhạc Xuân",
+    thumbnail: "https://img.youtube.com/vi/OhXXsCpv0JI/hqdefault.jpg"
+  },
+  {
+    id: "faxZLGAEDHU",
+    title: "Cái Tết Giàu",
+    artist: "Nhạc Tết",
+    thumbnail: "https://img.youtube.com/vi/faxZLGAEDHU/hqdefault.jpg"
   }
 ];
 
