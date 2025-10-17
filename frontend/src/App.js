@@ -332,17 +332,17 @@ function App() {
     handleSeek(e);
   };
 
-  const handleProgressMouseMove = (e) => {
-    if (!isDragging) return;
-    handleSeek(e);
-  };
-
   const handleProgressMouseUp = () => {
     setIsDragging(false);
   };
 
   // Add mouse event listeners for dragging
   useEffect(() => {
+    const handleProgressMouseMove = (e) => {
+      if (!isDragging) return;
+      handleSeek(e);
+    };
+
     if (isDragging) {
       document.addEventListener('mousemove', handleProgressMouseMove);
       document.addEventListener('mouseup', handleProgressMouseUp);
@@ -351,7 +351,7 @@ function App() {
         document.removeEventListener('mouseup', handleProgressMouseUp);
       };
     }
-  }, [isDragging]);
+  }, [isDragging, player, duration]);
 
   // Previous track
   const previousTrack = () => {
