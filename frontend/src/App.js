@@ -306,7 +306,21 @@ function App() {
     const handleEnded = () => {
       // Next track when song ends
       const newIndex = (currentTrack + 1) % currentPlaylist.length;
-      changeTrack(newIndex);
+      setCurrentTrack(newIndex);
+      setShowPlaylist(false);
+      setCurrentTime(0);
+      
+      // Load and play new track
+      if (audio) {
+        audio.src = currentPlaylist[newIndex].audio;
+        audio.load();
+        audio.play().then(() => {
+          setIsPlaying(true);
+        }).catch(error => {
+          console.log("Autoplay prevented:", error);
+          setIsPlaying(false);
+        });
+      }
     };
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
