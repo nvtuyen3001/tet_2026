@@ -171,7 +171,7 @@ const christmasPlaylist = [
     title: "Merry Christmas Mr Lawrence",
     artist: "Christmas Song",
     thumbnail: "https://img.youtube.com/vi/LGs_vGt0MY8/hqdefault.jpg",
-    audio: "/music/noel/merrychristmasmrlawrence.mp3"
+    audio: "/music/noel/merrychristmas.mp3"
   },
   {
     id: 2,
