@@ -339,8 +339,18 @@ function App() {
   // Add mouse event listeners for dragging
   useEffect(() => {
     const handleProgressMouseMove = (e) => {
-      if (!isDragging) return;
-      handleSeek(e);
+      if (!isDragging || !player || !duration) return;
+      
+      const rect = document.querySelector('.progress-bar-container');
+      if (!rect) return;
+      
+      const rectBounds = rect.getBoundingClientRect();
+      const clickX = e.clientX - rectBounds.left;
+      const percentage = clickX / rectBounds.width;
+      const seekTime = percentage * duration;
+      
+      player.seekTo(seekTime);
+      setCurrentTime(seekTime);
     };
 
     if (isDragging) {
@@ -351,6 +361,7 @@ function App() {
         document.removeEventListener('mouseup', handleProgressMouseUp);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging, player, duration]);
 
   // Previous track
