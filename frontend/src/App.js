@@ -226,6 +226,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [volume, setVolume] = useState(1); // 0 to 1
   
   // Audio player ref
   const audioRef = useRef(null);
@@ -326,8 +327,9 @@ function App() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Update audio source
+    // Update audio source and volume
     audio.src = currentPlaylist[currentTrack].audio;
+    audio.volume = volume;
     audio.load();
     
     // Auto play if was playing before
@@ -337,7 +339,7 @@ function App() {
         setIsPlaying(false);
       });
     }
-  }, [currentTrack, currentPlaylist, isPlaying]);
+  }, [currentTrack, currentPlaylist, isPlaying, volume]);
 
   // Handle play/pause
   const togglePlayPause = () => {
@@ -363,12 +365,21 @@ function App() {
     setIsPlaying(true); // Set to playing state
   };
 
-  // Format time helper
+  // Format time helper - format as MM:SS
   const formatTime = (seconds) => {
-    if (!seconds || isNaN(seconds)) return "0:00";
+    if (!seconds || isNaN(seconds)) return "00:00";
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Handle volume change
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
   };
 
   // Handle seek
@@ -514,8 +525,7 @@ function App() {
           {/* Progress Bar */}
           <div className="progress-section">
             <div className="time-display">
-              <span className="current-time">{formatTime(currentTime)}</span>
-              <span className="duration">{formatTime(duration)}</span>
+              <span className="current-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
             </div>
             <div 
               className="progress-bar-container"
@@ -580,6 +590,21 @@ function App() {
             >
               <List size={20} />
             </button>
+          </div>
+
+          {/* Volume Control */}
+          <div className="volume-control">
+            <span className="volume-label">🔊</span>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="volume-slider"
+            />
+            <span className="volume-value">{Math.round(volume * 100)}%</span>
           </div>
 
           {/* Hidden Audio Player */}
