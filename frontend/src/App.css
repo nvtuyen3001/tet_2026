@@ -95,7 +95,7 @@ body {
 
 .App {
   min-height: 100vh;
-  background: url('/background_tet.png') no-repeat center center fixed;
+  background: url('../public/background_tet.png') no-repeat center center fixed;
   background-size: cover;
   background-attachment: fixed;
   display: flex;
