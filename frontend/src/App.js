@@ -517,16 +517,15 @@ function App() {
               onTouchStart={handleProgressMouseDown}
               onTouchMove={(e) => {
                 e.preventDefault();
-                if (isDragging && e.touches[0]) {
+                const audio = audioRef.current;
+                if (isDragging && e.touches[0] && audio && duration) {
                   const touch = e.touches[0];
                   const rect = e.currentTarget.getBoundingClientRect();
                   const clickX = touch.clientX - rect.left;
                   const percentage = Math.max(0, Math.min(1, clickX / rect.width));
                   const seekTime = percentage * duration;
-                  if (player && duration) {
-                    player.seekTo(seekTime);
-                    setCurrentTime(seekTime);
-                  }
+                  audio.currentTime = seekTime;
+                  setCurrentTime(seekTime);
                 }
               }}
               onTouchEnd={() => setIsDragging(false)}
