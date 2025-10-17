@@ -304,23 +304,10 @@ function App() {
     };
 
     const handleEnded = () => {
-      // Next track when song ends
+      // Next track when song ends - will trigger useEffect to load and play
       const newIndex = (currentTrack + 1) % currentPlaylist.length;
       setCurrentTrack(newIndex);
-      setShowPlaylist(false);
       setCurrentTime(0);
-      
-      // Load and play new track
-      if (audio) {
-        audio.src = currentPlaylist[newIndex].audio;
-        audio.load();
-        audio.play().then(() => {
-          setIsPlaying(true);
-        }).catch(error => {
-          console.log("Autoplay prevented:", error);
-          setIsPlaying(false);
-        });
-      }
     };
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
@@ -333,6 +320,24 @@ function App() {
       audio.removeEventListener('ended', handleEnded);
     };
   }, [isDragging, currentTrack, currentPlaylist]);
+
+  // Load new track when currentTrack changes
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    // Update audio source
+    audio.src = currentPlaylist[currentTrack].audio;
+    audio.load();
+    
+    // Auto play if was playing before
+    if (isPlaying) {
+      audio.play().catch(error => {
+        console.log("Autoplay prevented:", error);
+        setIsPlaying(false);
+      });
+    }
+  }, [currentTrack, currentPlaylist, isPlaying]);
 
   // Handle play/pause
   const togglePlayPause = () => {
@@ -352,22 +357,10 @@ function App() {
 
   // Handle track change
   const changeTrack = (index) => {
-    const audio = audioRef.current;
     setCurrentTrack(index);
     setShowPlaylist(false);
     setCurrentTime(0);
-    
-    // Load and play new track
-    if (audio) {
-      audio.src = currentPlaylist[index].audio;
-      audio.load();
-      audio.play().then(() => {
-        setIsPlaying(true);
-      }).catch(error => {
-        console.log("Autoplay prevented:", error);
-        setIsPlaying(false);
-      });
-    }
+    setIsPlaying(true); // Set to playing state
   };
 
   // Format time helper
