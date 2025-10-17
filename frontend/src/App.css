@@ -95,14 +95,27 @@ body {
 
 .App {
   min-height: 100vh;
-  background: url('../public/background_tet.png') no-repeat center center fixed;
   background-size: cover;
   background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   position: relative;
+}
+
+.App.lunar-new-year {
+  background-image: url('../public/background_tet.png');
+}
+
+.App.solar-new-year {
+  background-image: url('../public/background_tet2.jpg');
+}
+
+.App.christmas {
+  background-image: url('../public/background_noel.jpg');
 }
 
 .App::before {

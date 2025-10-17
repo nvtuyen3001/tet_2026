@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import axios from "axios";
-import YouTube from "react-youtube";
 import { Play, Pause, SkipBack, SkipForward, List, Calendar } from "lucide-react";
 import config from "./config";
 
@@ -14,173 +13,200 @@ const holidays = {
     date: "2026-01-01T00:00:00",
     title: "🎉 Năm Mới đang đến rất gần!",
     subtitle: "Hãy cùng đếm ngược tới khoảnh khắc giao thừa năm mới.",
-    type: "tet"
+    type: "solar-new-year",
+    bgClass: "solar-new-year"
   },
   lunarNewYear: {
     name: "Tết Âm Lịch",
     date: "2026-02-17T00:00:00",
     title: "🌸 Tết đang đến rất gần!",
     subtitle: "Hãy cùng đếm ngược tới khoảnh khắc giao thừa năm mới.",
-    type: "tet"
+    type: "lunar-new-year",
+    bgClass: "lunar-new-year"
   },
   christmas: {
     name: "Noel",
     date: "2025-12-25T00:00:00",
     title: "🎄 Giáng Sinh đang đến rất gần!",
     subtitle: "Hãy cùng đếm ngược tới đêm Noel đầm ấm.",
-    type: "christmas"
+    type: "christmas",
+    bgClass: "christmas"
   }
 };
 
-// Danh sách nhạc Tết
+// Danh sách nhạc Tết - Sử dụng file local MP3 trong public/music/tet/
 const tetPlaylist = [
   {
-    id: "gOtfJ151ue4",
+    id: 1,
     title: "Tết Bình An (Đại Mèo Remix)",
     artist: "Hana Cẩm Tiên",
-    thumbnail: "https://img.youtube.com/vi/gOtfJ151ue4/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/gOtfJ151ue4/hqdefault.jpg",
+    audio: "/music/tet/tetbinhan.mp3"
   },
   {
-    id: "i6QjJwGOGe0",
+    id: 2,
     title: "Xuân Đã Về",
     artist: "Nhạc Tết 2025",
-    thumbnail: "https://img.youtube.com/vi/i6QjJwGOGe0/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/i6QjJwGOGe0/hqdefault.jpg",
+    audio: "/music/tet/xuandave.mp3"
   },
   {
-    id: "Thf6-faRGI4",
+    id: 3,
     title: "Ngày Tết Quê Em",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/Thf6-faRGI4/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/Thf6-faRGI4/hqdefault.jpg",
+    audio: "/music/tet/ngaytetqueem.mp3"
   },
   {
-    id: "YGhE2HZ8g8M",
+    id: 4,
     title: "Tết Này Con Sẽ Về",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/YGhE2HZ8g8M/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/YGhE2HZ8g8M/hqdefault.jpg",
+    audio: "/music/tet/tetnayconseve.mp3"
   },
   {
-    id: "vTJdVE_gjI0",
+    id: 5,
     title: "Đi Về Nhà",
     artist: "Nhạc Xuân 2025",
-    thumbnail: "https://img.youtube.com/vi/vTJdVE_gjI0/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/vTJdVE_gjI0/hqdefault.jpg",
+    audio: "/music/tet/divenha.mp3"
   },
   {
-    id: "ekMxrFeZb-0",
+    id: 6,
     title: "Năm Qua Tôi Đã Làm Gì",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/ekMxrFeZb-0/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/ekMxrFeZb-0/hqdefault.jpg",
+    audio: "/music/tet/namquatoidalamgi.mp3"
   },
   {
-    id: "Qc1GxHNRRn4",
+    id: 7,
     title: "Đi Để Trở Về",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/Qc1GxHNRRn4/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/Qc1GxHNRRn4/hqdefault.jpg",
+    audio: "/music/tet/didetrave.mp3"
   },
   {
-    id: "d7k0FsVLB6E",
+    id: 8,
     title: "Tết Tết Tết Tết Đến Rồi",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/d7k0FsVLB6E/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/d7k0FsVLB6E/hqdefault.jpg",
+    audio: "/music/tet/tettettettetdenroi.mp3"
   },
   {
-    id: "g20JODoyHTA",
+    id: 9,
     title: "Như Hoa Mùa Xuân",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/g20JODoyHTA/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/g20JODoyHTA/hqdefault.jpg",
+    audio: "/music/tet/nhuhoamuaxuan.mp3"
   },
   {
-    id: "QLfzXiKREFM",
+    id: 10,
     title: "Ngày Xuân Lòng Phụng Sụm Vay",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/QLfzXiKREFM/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/QLfzXiKREFM/hqdefault.jpg",
+    audio: "/music/tet/ngayxuanlongphungsumvay.mp3"
   },
   {
-    id: "A-7t7DrKHsc",
+    id: 11,
     title: "Tết Là Tết",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/A-7t7DrKHsc/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/A-7t7DrKHsc/hqdefault.jpg",
+    audio: "/music/tet/tetlatet.mp3"
   },
   {
-    id: "kDmOOj5Y0DI",
+    id: 12,
     title: "Chuyện Cũ Bỏ Qua",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/kDmOOj5Y0DI/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/kDmOOj5Y0DI/hqdefault.jpg",
+    audio: "/music/tet/chuyencuboqua.mp3"
   },
   {
-    id: "18lVcz3wkWw",
+    id: 13,
     title: "Mùa Xuân Ơi",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/18lVcz3wkWw/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/18lVcz3wkWw/hqdefault.jpg",
+    audio: "/music/tet/muaxuanoi.mp3"
   },
   {
-    id: "mMobsXN6SPY",
+    id: 14,
     title: "Đoàn Xuân Ca",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/mMobsXN6SPY/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/mMobsXN6SPY/hqdefault.jpg",
+    audio: "/music/tet/doanxuanca.mp3"
   },
   {
-    id: "VnpdsO4n3Yw",
+    id: 15,
     title: "Phố Xuân",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/VnpdsO4n3Yw/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/VnpdsO4n3Yw/hqdefault.jpg",
+    audio: "/music/tet/phoxuan.mp3"
   },
   {
-    id: "myH0HIZNRiE",
+    id: 16,
     title: "Con Bướm Xuân",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/myH0HIZNRiE/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/myH0HIZNRiE/hqdefault.jpg",
+    audio: "/music/tet/conbuomxuan.mp3"
   },
   {
-    id: "OhXXsCpv0JI",
+    id: 17,
     title: "Xuân Phát Tài",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/OhXXsCpv0JI/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/OhXXsCpv0JI/hqdefault.jpg",
+    audio: "/music/tet/xuanphattai.mp3"
   },
   {
-    id: "faxZLGAEDHU",
+    id: 18,
     title: "Cái Tết Giàu",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/faxZLGAEDHU/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/faxZLGAEDHU/hqdefault.jpg",
+    audio: "/music/tet/caitetgiau.mp3"
   }
 ];
 
-// Danh sách nhạc Noel
+// Danh sách nhạc Noel - Sử dụng file local MP3 trong public/music/christmas/
 const christmasPlaylist = [
   {
-    id: "LGs_vGt0MY8",
+    id: 1,
     title: "Merry Christmas Mr Lawrence",
     artist: "Christmas Song",
-    thumbnail: "https://img.youtube.com/vi/LGs_vGt0MY8/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/LGs_vGt0MY8/hqdefault.jpg",
+    audio: "/music/christmas/merrychristmasmrlawrence.mp3"
   },
   {
-    id: "KhqNTjbQ71A",
+    id: 2,
     title: "Last Christmas",
     artist: "Wham!",
-    thumbnail: "https://img.youtube.com/vi/KhqNTjbQ71A/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/KhqNTjbQ71A/hqdefault.jpg",
+    audio: "/music/christmas/lastchristmas.mp3"
   },
   {
-    id: "aAkMkVFwAoo",
+    id: 3,
     title: "All I Want For Christmas Is You",
     artist: "Mariah Carey",
-    thumbnail: "https://img.youtube.com/vi/aAkMkVFwAoo/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/aAkMkVFwAoo/hqdefault.jpg",
+    audio: "/music/christmas/alliwantforchristmasisyou.mp3"
   },
   {
-    id: "nlR0MkrRklg",
+    id: 4,
     title: "Santa Tell Me",
     artist: "Ariana Grande",
-    thumbnail: "https://img.youtube.com/vi/nlR0MkrRklg/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/nlR0MkrRklg/hqdefault.jpg",
+    audio: "/music/christmas/santatellme.mp3"
   },
   {
-    id: "LUjn3RpkcKY",
+    id: 5,
     title: "Mistletoe",
     artist: "Justin Bieber",
-    thumbnail: "https://img.youtube.com/vi/LUjn3RpkcKY/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/LUjn3RpkcKY/hqdefault.jpg",
+    audio: "/music/christmas/mistletoe.mp3"
   },
   {
-    id: "DkXIJe8CaIc",
+    id: 6,
     title: "Sleigh Ride",
     artist: "Christmas Classic",
-    thumbnail: "https://img.youtube.com/vi/DkXIJe8CaIc/hqdefault.jpg"
+    thumbnail: "https://img.youtube.com/vi/DkXIJe8CaIc/hqdefault.jpg",
+    audio: "/music/christmas/sleighride.mp3"
   }
 ];
 
@@ -196,11 +222,13 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPlaylist, setShowPlaylist] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [player, setPlayer] = useState(null);
   const [selectedHoliday, setSelectedHoliday] = useState("lunarNewYear");
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  
+  // Audio player ref
+  const audioRef = useRef(null);
   
   // Lấy playlist dựa trên loại lễ
   const currentPlaylist = holidays[selectedHoliday].type === "christmas" 
@@ -248,61 +276,84 @@ function App() {
     return () => clearInterval(interval);
   }, [selectedHoliday]);
 
-  // YouTube player ready
-  const onPlayerReady = (event) => {
-    setPlayer(event.target);
-    setDuration(event.target.getDuration());
+  // Previous track
+  const previousTrack = () => {
+    const newIndex = currentTrack === 0 ? currentPlaylist.length - 1 : currentTrack - 1;
+    changeTrack(newIndex);
   };
 
-  // Update progress
-  useEffect(() => {
-    if (!player || !isPlaying || isDragging) return;
+  // Next track
+  const nextTrack = () => {
+    const newIndex = (currentTrack + 1) % currentPlaylist.length;
+    changeTrack(newIndex);
+  };
 
-    const updateProgress = () => {
-      if (player && player.getCurrentTime) {
-        const current = player.getCurrentTime();
-        const total = player.getDuration();
-        setCurrentTime(current);
-        setDuration(total);
+  // Audio event handlers
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
+    const handleTimeUpdate = () => {
+      if (!isDragging) {
+        setCurrentTime(audio.currentTime);
       }
     };
 
-    const interval = setInterval(updateProgress, 1000);
-    return () => clearInterval(interval);
-  }, [player, isPlaying, isDragging]);
+    const handleEnded = () => {
+      // Next track when song ends
+      const newIndex = (currentTrack + 1) % currentPlaylist.length;
+      changeTrack(newIndex);
+    };
+
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [isDragging, currentTrack, currentPlaylist]);
 
   // Handle play/pause
-  const togglePlayPause = async () => {
-    if (!player) return;
+  const togglePlayPause = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
     
-    try {
-      if (isPlaying) {
-        player.pauseVideo();
-        setIsPlaying(false);
-      } else {
-        // Thêm user interaction để kích hoạt audio trên mobile
-        await player.playVideo();
-        setIsPlaying(true);
-      }
-    } catch (error) {
-      console.log("Playback error:", error);
-      // Fallback: thử play lại sau một chút
-      setTimeout(() => {
-        if (player && !isPlaying) {
-          player.playVideo();
-          setIsPlaying(true);
-        }
-      }, 100);
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
+      audio.play().catch(error => {
+        console.log("Playback error:", error);
+      });
+      setIsPlaying(true);
     }
   };
 
   // Handle track change
   const changeTrack = (index) => {
+    const audio = audioRef.current;
     setCurrentTrack(index);
     setShowPlaylist(false);
-    setIsPlaying(true);
     setCurrentTime(0);
-    setDuration(0);
+    
+    // Load and play new track
+    if (audio) {
+      audio.src = currentPlaylist[index].audio;
+      audio.load();
+      audio.play().then(() => {
+        setIsPlaying(true);
+      }).catch(error => {
+        console.log("Autoplay prevented:", error);
+        setIsPlaying(false);
+      });
+    }
   };
 
   // Format time helper
@@ -315,14 +366,15 @@ function App() {
 
   // Handle seek
   const handleSeek = (e) => {
-    if (!player || !duration) return;
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
     
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const percentage = clickX / rect.width;
     const seekTime = percentage * duration;
     
-    player.seekTo(seekTime);
+    audio.currentTime = seekTime;
     setCurrentTime(seekTime);
   };
 
@@ -339,17 +391,18 @@ function App() {
   // Add mouse event listeners for dragging
   useEffect(() => {
     const handleProgressMouseMove = (e) => {
-      if (!isDragging || !player || !duration) return;
+      const audio = audioRef.current;
+      if (!isDragging || !audio || !duration) return;
       
       const rect = document.querySelector('.progress-bar-container');
       if (!rect) return;
       
       const rectBounds = rect.getBoundingClientRect();
       const clickX = e.clientX - rectBounds.left;
-      const percentage = clickX / rectBounds.width;
+      const percentage = Math.max(0, Math.min(1, clickX / rectBounds.width));
       const seekTime = percentage * duration;
       
-      player.seekTo(seekTime);
+      audio.currentTime = seekTime;
       setCurrentTime(seekTime);
     };
 
@@ -362,51 +415,26 @@ function App() {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDragging, player, duration]);
-
-  // Previous track
-  const previousTrack = () => {
-    const newIndex = currentTrack === 0 ? currentPlaylist.length - 1 : currentTrack - 1;
-    changeTrack(newIndex);
-  };
-
-  // Next track
-  const nextTrack = () => {
-    const newIndex = (currentTrack + 1) % currentPlaylist.length;
-    changeTrack(newIndex);
-  };
+  }, [isDragging, duration]);
   
   // Handle holiday change
   const handleHolidayChange = (holidayKey) => {
+    const audio = audioRef.current;
     setSelectedHoliday(holidayKey);
     setShowMenu(false);
     setCurrentTrack(0);
     setIsPlaying(false);
-    if (player) {
-      player.stopVideo();
+    setCurrentTime(0);
+    setDuration(0);
+    
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
     }
   };
 
-  // YouTube player options - Sửa để hoạt động trên mobile
-  const opts = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      autoplay: 0, // Tắt autoplay để tránh vấn đề trên mobile
-      controls: 0,
-      disablekb: 1,
-      enablejsapi: 1,
-      fs: 0,
-      iv_load_policy: 3,
-      modestbranding: 1,
-      playsinline: 1, // Quan trọng cho iOS
-      rel: 0,
-      showinfo: 0,
-    },
-  };
-
   return (
-    <div className="App">
+    <div className={`App ${holidays[selectedHoliday].bgClass}`}>
       {/* Holiday Selection Menu */}
       <div className="holiday-menu" data-testid="holiday-menu">
         <button 
@@ -548,12 +576,11 @@ function App() {
             </button>
           </div>
 
-          {/* Hidden YouTube Player */}
-          <YouTube
-            videoId={currentPlaylist[currentTrack].id}
-            opts={opts}
-            onReady={onPlayerReady}
-            onEnd={nextTrack}
+          {/* Hidden Audio Player */}
+          <audio
+            ref={audioRef}
+            src={currentPlaylist[currentTrack].audio}
+            preload="metadata"
           />
         </div>
 
