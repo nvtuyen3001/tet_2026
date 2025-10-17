@@ -164,49 +164,49 @@ const tetPlaylist = [
   }
 ];
 
-// Danh sách nhạc Noel - Sử dụng file local MP3 trong public/music/christmas/
+// Danh sách nhạc Noel - Sử dụng file local MP3 trong public/music/noel/
 const christmasPlaylist = [
   {
     id: 1,
     title: "Merry Christmas Mr Lawrence",
     artist: "Christmas Song",
     thumbnail: "https://img.youtube.com/vi/LGs_vGt0MY8/hqdefault.jpg",
-    audio: "/music/christmas/merrychristmasmrlawrence.mp3"
+    audio: "/music/noel/merrychristmasmrlawrence.mp3"
   },
   {
     id: 2,
     title: "Last Christmas",
     artist: "Wham!",
     thumbnail: "https://img.youtube.com/vi/KhqNTjbQ71A/hqdefault.jpg",
-    audio: "/music/christmas/lastchristmas.mp3"
+    audio: "/music/noel/lastchristmas.mp3"
   },
   {
     id: 3,
     title: "All I Want For Christmas Is You",
     artist: "Mariah Carey",
     thumbnail: "https://img.youtube.com/vi/aAkMkVFwAoo/hqdefault.jpg",
-    audio: "/music/christmas/alliwantforchristmasisyou.mp3"
+    audio: "/music/noel/alliwantforchristmasisyou.mp3"
   },
   {
     id: 4,
     title: "Santa Tell Me",
     artist: "Ariana Grande",
     thumbnail: "https://img.youtube.com/vi/nlR0MkrRklg/hqdefault.jpg",
-    audio: "/music/christmas/santatellme.mp3"
+    audio: "/music/noel/santatellme.mp3"
   },
   {
     id: 5,
     title: "Mistletoe",
     artist: "Justin Bieber",
     thumbnail: "https://img.youtube.com/vi/LUjn3RpkcKY/hqdefault.jpg",
-    audio: "/music/christmas/mistletoe.mp3"
+    audio: "/music/noel/mistletoe.mp3"
   },
   {
     id: 6,
     title: "Sleigh Ride",
     artist: "Christmas Classic",
     thumbnail: "https://img.youtube.com/vi/DkXIJe8CaIc/hqdefault.jpg",
-    audio: "/music/christmas/sleighride.mp3"
+    audio: "/music/noel/sleighride.mp3"
   }
 ];
 
