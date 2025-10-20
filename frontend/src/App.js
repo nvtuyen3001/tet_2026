@@ -353,7 +353,7 @@ function App() {
         setIsPlaying(false);
       });
     }
-  }, [currentTrack, currentPlaylist, isPlaying, volume]);
+  }, [currentTrack, currentPlaylist, isPlaying]);
 
   // Handle play/pause
   const togglePlayPause = () => {
