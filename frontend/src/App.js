@@ -101,7 +101,7 @@ const tetPlaylist = [
   },
   {
     id: 10,
-    title: "Ngày Xuân Lòng Phụng Sụm Vay",
+    title: "Ngày Xuân Lòng Phụng Sum Vầy",
     artist: "Nhạc Tết",
     thumbnail: "https://img.youtube.com/vi/QLfzXiKREFM/hqdefault.jpg",
     audio: "/music/tet/ngayxuanlongphungxumvay.mp3"
@@ -166,14 +166,14 @@ const tetPlaylist = [
     id: 19,
     title: "Tết Đong Đầy",
     artist: "Nhạc Xuân",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+    thumbnail: "https://i.ytimg.com/vi/gOtfJ151ue4/maxresdefault.jpg",
     audio: "/music/tet/tetdongday.mp3"
   },
   {
     id: 20,
     title: "Một Năm Mới Bình An",
     artist: "Nhạc Tết",
-    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+    thumbnail: "https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/2/7/7/e/277ef3a66a67413690578905dbb85451.jpg",
     audio: "/music/tet/motnammoibinhan.mp3"
   }
 ];
