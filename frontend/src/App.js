@@ -353,6 +353,7 @@ function App() {
         setIsPlaying(false);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTrack, currentPlaylist, isPlaying]);
 
   // Handle play/pause
