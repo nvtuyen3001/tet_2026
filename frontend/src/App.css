@@ -106,6 +106,129 @@ body {
   position: relative;
 }
 
+.app-layout {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  gap: 32px;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.side-widget {
+  flex: 0 0 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-widget .flip-clock,
+.date-widget .date-card {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 24px 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+}
+
+.flip-clock {
+  gap: 18px;
+}
+
+.clock-period {
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.clock-digits {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.clock-card {
+  flex: 1;
+  background: #151515;
+  border-radius: 16px;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.clock-value {
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.clock-label {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.date-card {
+  width: 100%;
+}
+
+.date-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+}
+
+.date-content {
+  width: 100%;
+  background: #151515;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.date-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.date-meta {
+  text-align: left;
+}
+
+.month-number {
+  font-size: 1rem;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.month-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.weekday-label {
+  margin-top: 4px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .App.lunar-new-year {
   background-image: url('../public/background_tet.png');
 }
@@ -130,7 +253,7 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 680px;
   width: 100%;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px);
@@ -480,11 +603,48 @@ body {
   margin: 4px 0;
 }
 
+@media (max-width: 1024px) {
+  .app-layout {
+    flex-direction: column;
+    max-width: 800px;
+  }
+
+  .side-widget {
+    width: 100%;
+  }
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .holiday-menu {
     top: 10px;
     left: 10px;
+  }
+
+  .app-layout {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .side-widget {
+    width: 100%;
+  }
+
+  .clock-digits {
+    gap: 8px;
+  }
+
+  .clock-value {
+    font-size: 2.5rem;
+  }
+
+  .date-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .date-meta {
+    text-align: center;
   }
 
   .menu-trigger {
@@ -571,6 +731,14 @@ body {
     font-size: 1.3rem;
   }
 
+  .app-layout {
+    gap: 20px;
+  }
+
+  .clock-value {
+    font-size: 2.2rem;
+  }
+
   .countdown-box .number {
     font-size: 2rem;
   }
@@ -602,4 +770,242 @@ body {
 
 .playlist-content::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* Tab Bar */
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeInTab 0.3s ease;
+}
+
+@keyframes fadeInTab {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Calendar View */
+.calendar-content {
+  padding: 10px 0;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.calendar-grid {
+  width: 100%;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 4px;
+  letter-spacing: 0.05em;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 4px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  gap: 2px;
+}
+
+.calendar-day:hover:not(.empty) {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.calendar-day.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.calendar-day.current {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+}
+
+.calendar-day.tet-period {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.3) 0%, rgba(247, 147, 30, 0.3) 100%);
+  border: 2px solid rgba(255, 107, 53, 0.5);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.calendar-day.tet-period:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.4) 0%, rgba(247, 147, 30, 0.4) 100%);
+  border-color: rgba(255, 107, 53, 0.7);
+  transform: scale(1.08);
+}
+
+.calendar-day.tet-period .solar-date {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.calendar-day.tet-period .lunar-date {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.calendar-day.tet-day {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%) !important;
+  border: 3px solid #ffd700;
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
+  animation: tetGlow 2s ease-in-out infinite;
+  position: relative;
+  overflow: visible;
+}
+
+.calendar-day.tet-day::before {
+  content: '🎊';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 1.2rem;
+  animation: rotate 3s linear infinite;
+}
+
+.calendar-day.tet-day:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 25px rgba(255, 107, 53, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+}
+
+.calendar-day.tet-day .solar-date {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-day.tet-day .lunar-date {
+  color: #ffd700;
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes tetGlow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(255, 107, 53, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.solar-date {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.lunar-date {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1;
+}
+
+.calendar-day.current .lunar-date {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Responsive Calendar */
+@media (max-width: 640px) {
+  .calendar-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .calendar-weekday {
+    font-size: 0.75rem;
+    padding: 6px 2px;
+  }
+
+  .solar-date {
+    font-size: 0.9rem;
+  }
+
+  .lunar-date {
+    font-size: 0.6rem;
+  }
 }

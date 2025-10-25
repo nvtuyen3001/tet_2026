@@ -76,14 +76,14 @@ const tetPlaylist = [
     title: "Năm Qua Tôi Đã Làm Gì",
     artist: "Nhạc Tết",
     thumbnail: "https://img.youtube.com/vi/ekMxrFeZb-0/hqdefault.jpg",
-    audio: "/music/tet/namquatoidalamgi.mp3"
+    audio: "/music/tet/namquadalamgi.mp3"
   },
   {
     id: 7,
     title: "Đi Để Trở Về",
     artist: "Nhạc Xuân",
     thumbnail: "https://img.youtube.com/vi/Qc1GxHNRRn4/hqdefault.jpg",
-    audio: "/music/tet/didetrave.mp3"
+    audio: "/music/tet/didetrove.mp3"
   },
   {
     id: 8,
@@ -231,6 +231,16 @@ function App() {
     minutes: 0,
     seconds: 0
   });
+  // eslint-disable-next-line no-unused-vars
+  const [currentDateInfo, setCurrentDateInfo] = useState({
+    hours: "00",
+    minutes: "00",
+    period: "AM",
+    day: "01",
+    month: "01",
+    monthLabel: "Tháng 01",
+    weekday: "Thứ hai"
+  });
   const [userInfo, setUserInfo] = useState({ ip: "Loading...", isp: "Loading..." });
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -241,9 +251,13 @@ function App() {
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [volume, setVolume] = useState(1); // 0 to 1
+  const [activeTab, setActiveTab] = useState("music"); // music or calendar
   
   // Audio player ref
   const audioRef = useRef(null);
+  const playerContainerRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   
   // Lấy playlist dựa trên loại lễ
   const currentPlaylist = holidays[selectedHoliday].type === "christmas" 
@@ -262,6 +276,39 @@ function App() {
       }
     };
     fetchUserInfo();
+  }, []);
+
+  // Live clock info for side widgets
+  useEffect(() => {
+    const updateDateInfo = () => {
+      const now = new Date();
+      const formatLabel = (label) => {
+        if (!label) return "";
+        return label.charAt(0).toUpperCase() + label.slice(1);
+      };
+      const hours24 = now.getHours();
+      const period = hours24 >= 12 ? "PM" : "AM";
+      const hours = hours24 % 12 || 12;
+      const minutes = now.getMinutes();
+      const day = now.getDate();
+      const month = now.getMonth() + 1;
+      const monthLabel = formatLabel(now.toLocaleString("vi-VN", { month: "long" }));
+      const weekday = formatLabel(now.toLocaleString("vi-VN", { weekday: "long" }));
+
+      setCurrentDateInfo({
+        hours: hours.toString().padStart(2, "0"),
+        minutes: minutes.toString().padStart(2, "0"),
+        period,
+        day: day.toString().padStart(2, "0"),
+        month: month.toString().padStart(2, "0"),
+        monthLabel,
+        weekday
+      });
+    };
+
+    updateDateInfo();
+    const interval = setInterval(updateDateInfo, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   // Countdown to selected holiday
@@ -466,6 +513,182 @@ function App() {
     }
   };
 
+  // Swipe handlers
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeDistance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // Swipe left - go to calendar
+        setActiveTab("calendar");
+      } else {
+        // Swipe right - go to music
+        setActiveTab("music");
+      }
+    }
+  };
+
+  // Lunar calendar conversion - Vietnamese timezone
+  const jdFromDate = (dd, mm, yy) => {
+    const a = Math.floor((14 - mm) / 12);
+    const y = yy + 4800 - a;
+    const m = mm + 12 * a - 3;
+    let jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+    if (jd < 2299161) {
+      jd = dd + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - 32083;
+    }
+    return jd;
+  };
+
+  const getNewMoonDay = (k, timeZone) => {
+    const T = k / 1236.85;
+    const T2 = T * T;
+    const T3 = T2 * T;
+    const dr = Math.PI / 180;
+    let Jd1 = 2415020.75933 + 29.53058868 * k + 0.0001178 * T2 - 0.000000155 * T3;
+    Jd1 = Jd1 + 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+    const M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
+    const Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
+    const F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+    let C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * dr * M);
+    C1 = C1 - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(dr * 2 * Mpr);
+    C1 = C1 - 0.0004 * Math.sin(dr * 3 * Mpr);
+    C1 = C1 + 0.0104 * Math.sin(dr * 2 * F) - 0.0051 * Math.sin(dr * (M + Mpr));
+    C1 = C1 - 0.0074 * Math.sin(dr * (M - Mpr)) + 0.0004 * Math.sin(dr * (2 * F + M));
+    C1 = C1 - 0.0004 * Math.sin(dr * (2 * F - M)) - 0.0006 * Math.sin(dr * (2 * F + Mpr));
+    C1 = C1 + 0.0010 * Math.sin(dr * (2 * F - Mpr)) + 0.0005 * Math.sin(dr * (2 * Mpr + M));
+    const deltat = 0;
+    const JdNew = Jd1 + C1 - deltat / 86400;
+    return Math.floor(JdNew + 0.5 + timeZone / 24);
+  };
+
+  const getSunLongitude = (jdn, timeZone) => {
+    const T = (jdn - 2451545.5 - timeZone / 24) / 36525;
+    const T2 = T * T;
+    const dr = Math.PI / 180;
+    const M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2;
+    const L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+    let DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(dr * M);
+    DL = DL + (0.019993 - 0.000101 * T) * Math.sin(dr * 2 * M) + 0.000290 * Math.sin(dr * 3 * M);
+    let L = L0 + DL;
+    L = L * dr;
+    L = L - Math.PI * 2 * (Math.floor(L / (Math.PI * 2)));
+    return Math.floor(L / Math.PI * 6);
+  };
+
+  const getLunarMonth11 = (yy, timeZone) => {
+    const off = jdFromDate(31, 12, yy) - 2415021;
+    const k = Math.floor(off / 29.530588853);
+    let nm = getNewMoonDay(k, timeZone);
+    const sunLong = getSunLongitude(nm, timeZone);
+    if (sunLong >= 9) {
+      nm = getNewMoonDay(k - 1, timeZone);
+    }
+    return nm;
+  };
+
+  const getLeapMonthOffset = (a11, timeZone) => {
+    const k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+    let last = 0;
+    let i = 1;
+    let arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    do {
+      last = arc;
+      i++;
+      arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+    } while (arc !== last && i < 14);
+    return i - 1;
+  };
+
+  const solarToLunar = (dd, mm, yy, timeZone = 7) => {
+    const dayNumber = jdFromDate(dd, mm, yy);
+    const k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+    let monthStart = getNewMoonDay(k + 1, timeZone);
+    if (monthStart > dayNumber) {
+      monthStart = getNewMoonDay(k, timeZone);
+    }
+    let a11 = getLunarMonth11(yy, timeZone);
+    let b11 = a11;
+    let lunarYear;
+    if (a11 >= monthStart) {
+      lunarYear = yy;
+      a11 = getLunarMonth11(yy - 1, timeZone);
+    } else {
+      lunarYear = yy + 1;
+      b11 = getLunarMonth11(yy + 1, timeZone);
+    }
+    const lunarDay = dayNumber - monthStart + 1;
+    const diff = Math.floor((monthStart - a11) / 29);
+    let lunarLeap = 0;
+    let lunarMonth = diff + 11;
+    if (b11 - a11 > 365) {
+      const leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+      if (diff >= leapMonthDiff) {
+        lunarMonth = diff + 10;
+        if (diff === leapMonthDiff) {
+          lunarLeap = 1;
+        }
+      }
+    }
+    if (lunarMonth > 12) {
+      lunarMonth = lunarMonth - 12;
+    }
+    if (lunarMonth >= 11 && diff < 4) {
+      lunarYear -= 1;
+    }
+    return [lunarDay, lunarMonth, lunarYear, lunarLeap];
+  };
+
+  // Get calendar data for February 2026
+  const getCalendarData = () => {
+    const year = 2026;
+    const month = 1; // February (0-indexed)
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startDayOfWeek = firstDay.getDay();
+    const now = new Date();
+    
+    const days = [];
+    // Empty cells for days before month starts
+    for (let i = 0; i < startDayOfWeek; i++) {
+      days.push(null);
+    }
+    // Days of the month with lunar dates
+    for (let day = 1; day <= daysInMonth; day++) {
+      const lunar = solarToLunar(day, month + 1, year);
+      days.push({
+        solar: day,
+        lunar: lunar[0],
+        lunarMonth: lunar[1]
+      });
+    }
+    
+    return { 
+      year, 
+      month, 
+      days, 
+      currentDay: now.getFullYear() === year && now.getMonth() === month ? now.getDate() : null 
+    };
+  };
+
+  const calendarData = getCalendarData();
+  const monthNames = [
+    "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", 
+    "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8",
+    "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+  ];
+  const weekDays = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+
   return (
     <div className={`App ${holidays[selectedHoliday].bgClass}`}>
       {/* Holiday Selection Menu */}
@@ -522,105 +745,170 @@ function App() {
           </div>
         </div>
 
-        {/* Music Player */}
-        <div className="music-player" data-testid="music-player">
-          <div className="player-header">
-            <img 
-              src={currentPlaylist[currentTrack].thumbnail} 
-              alt="Album Art" 
-              className="album-art"
-              data-testid="album-art"
-            />
-            <div className="track-info">
-              <div className="track-title" data-testid="track-title">{currentPlaylist[currentTrack].title}</div>
-              <div className="track-artist" data-testid="track-artist">{currentPlaylist[currentTrack].artist}</div>
-            </div>
+        {/* Music Player / Calendar Container */}
+        <div 
+          className="music-player" 
+          data-testid="music-player"
+          ref={playerContainerRef}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Tab Bar */}
+          <div className="tab-bar">
+            <button 
+              className={`tab-btn ${activeTab === "music" ? "active" : ""}`}
+              onClick={() => setActiveTab("music")}
+            >
+              Âm nhạc
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === "calendar" ? "active" : ""}`}
+              onClick={() => setActiveTab("calendar")}
+            >
+              Lịch Tết
+            </button>
           </div>
 
-          {/* Progress Bar */}
-          <div className="progress-section">
-            <div className="time-display">
-              <span className="current-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
-            </div>
-            <div 
-              className="progress-bar-container"
-              onMouseDown={handleProgressMouseDown}
-              onClick={handleSeek}
-              onTouchStart={handleProgressMouseDown}
-              onTouchMove={(e) => {
-                e.preventDefault();
-                const audio = audioRef.current;
-                if (isDragging && e.touches[0] && audio && duration) {
-                  const touch = e.touches[0];
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const clickX = touch.clientX - rect.left;
-                  const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-                  const seekTime = percentage * duration;
-                  audio.currentTime = seekTime;
-                  setCurrentTime(seekTime);
-                }
-              }}
-              onTouchEnd={() => setIsDragging(false)}
-            >
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill"
-                  style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+          {/* Music Player View */}
+          {activeTab === "music" && (
+            <div className="tab-content music-content">
+              <div className="player-header">
+                <img 
+                  src={currentPlaylist[currentTrack].thumbnail} 
+                  alt="Album Art" 
+                  className="album-art"
+                  data-testid="album-art"
                 />
+                <div className="track-info">
+                  <div className="track-title" data-testid="track-title">{currentPlaylist[currentTrack].title}</div>
+                  <div className="track-artist" data-testid="track-artist">{currentPlaylist[currentTrack].artist}</div>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="progress-section">
+                <div className="time-display">
+                  <span className="current-time">{formatTime(currentTime)} / {formatTime(duration)}</span>
+                </div>
                 <div 
-                  className="progress-thumb"
-                  style={{ left: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                  className="progress-bar-container"
+                  onMouseDown={handleProgressMouseDown}
+                  onClick={handleSeek}
+                  onTouchStart={handleProgressMouseDown}
+                  onTouchMove={(e) => {
+                    e.preventDefault();
+                    const audio = audioRef.current;
+                    if (isDragging && e.touches[0] && audio && duration) {
+                      const touch = e.touches[0];
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const clickX = touch.clientX - rect.left;
+                      const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+                      const seekTime = percentage * duration;
+                      audio.currentTime = seekTime;
+                      setCurrentTime(seekTime);
+                    }
+                  }}
+                  onTouchEnd={() => setIsDragging(false)}
+                >
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill"
+                      style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                    />
+                    <div 
+                      className="progress-thumb"
+                      style={{ left: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Controls */}
+              <div className="controls">
+                <button 
+                  className="control-btn" 
+                  onClick={previousTrack}
+                  data-testid="prev-button"
+                >
+                  <SkipBack size={20} />
+                </button>
+                <button 
+                  className="control-btn play-btn" 
+                  onClick={togglePlayPause}
+                  data-testid="play-pause-button"
+                >
+                  {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+                </button>
+                <button 
+                  className="control-btn" 
+                  onClick={nextTrack}
+                  data-testid="next-button"
+                >
+                  <SkipForward size={20} />
+                </button>
+                <button 
+                  className="control-btn" 
+                  onClick={() => setShowPlaylist(!showPlaylist)}
+                  data-testid="playlist-button"
+                >
+                  <List size={20} />
+                </button>
+              </div>
+
+              {/* Volume Control */}
+              <div className="volume-control">
+                <span className="volume-label">🔊</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="volume-slider"
                 />
+                <span className="volume-value">{Math.round(volume * 100)}%</span>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Controls */}
-          <div className="controls">
-            <button 
-              className="control-btn" 
-              onClick={previousTrack}
-              data-testid="prev-button"
-            >
-              <SkipBack size={20} />
-            </button>
-            <button 
-              className="control-btn play-btn" 
-              onClick={togglePlayPause}
-              data-testid="play-pause-button"
-            >
-              {isPlaying ? <Pause size={24} /> : <Play size={24} />}
-            </button>
-            <button 
-              className="control-btn" 
-              onClick={nextTrack}
-              data-testid="next-button"
-            >
-              <SkipForward size={20} />
-            </button>
-            <button 
-              className="control-btn" 
-              onClick={() => setShowPlaylist(!showPlaylist)}
-              data-testid="playlist-button"
-            >
-              <List size={20} />
-            </button>
-          </div>
-
-          {/* Volume Control */}
-          <div className="volume-control">
-            <span className="volume-label">🔊</span>
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="volume-slider"
-            />
-            <span className="volume-value">{Math.round(volume * 100)}%</span>
-          </div>
+          {/* Calendar View */}
+          {activeTab === "calendar" && (
+            <div className="tab-content calendar-content">
+              <div className="calendar-header">
+                <h3>{monthNames[calendarData.month]} {calendarData.year}</h3>
+              </div>
+              <div className="calendar-grid">
+                <div className="calendar-weekdays">
+                  {weekDays.map((day, index) => (
+                    <div key={index} className="calendar-weekday">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                 <div className="calendar-days">
+                   {calendarData.days.map((day, index) => {
+                     const isTetPeriod = day && day.solar >= 12 && day.solar <= 22;
+                     const isTetDay = day && day.solar === 17;
+                     return (
+                       <div 
+                         key={index} 
+                         className={`calendar-day ${day && day.solar === calendarData.currentDay ? 'current' : ''} ${!day ? 'empty' : ''} ${isTetPeriod ? 'tet-period' : ''} ${isTetDay ? 'tet-day' : ''}`}
+                       >
+                         {day && (
+                           <>
+                             <div className="solar-date">{day.solar}</div>
+                             <div className="lunar-date">{day.lunar}/{day.lunarMonth}</div>
+                           </>
+                         )}
+                       </div>
+                     );
+                   })}
+                 </div>
+              </div>
+            </div>
+          )}
 
           {/* Hidden Audio Player */}
           <audio
