@@ -11,6 +11,7 @@ const holidays = {
   solarNewYear: {
     name: "Tết Dương Lịch",
     date: "2026-01-01T00:00:00",
+    heading: "Happy New Year CountDown",
     title: "🎉 Năm Mới đang đến rất gần!",
     subtitle: "Hãy cùng đếm ngược tới khoảnh khắc giao thừa năm mới.",
     type: "solar-new-year",
@@ -19,6 +20,7 @@ const holidays = {
   lunarNewYear: {
     name: "Tết Âm Lịch",
     date: "2026-02-17T00:00:00",
+    heading: "Happy New Year CountDown",
     title: "🌸 Tết đang đến rất gần!",
     subtitle: "Hãy cùng đếm ngược tới khoảnh khắc giao thừa năm mới.",
     type: "lunar-new-year",
@@ -235,6 +237,7 @@ function App() {
   const [currentDateInfo, setCurrentDateInfo] = useState({
     hours: "00",
     minutes: "00",
+    seconds: "00",
     period: "AM",
     day: "01",
     month: "01",
@@ -278,6 +281,87 @@ function App() {
     fetchUserInfo();
   }, []);
 
+  // Falling flowers animation
+  useEffect(() => {
+    const createFlower = () => {
+      const flower = document.createElement('div');
+      flower.className = 'falling-flower';
+      
+      const img = document.createElement('img');
+      img.src = '/art/hoadao.png';
+      img.alt = 'Peach Blossom';
+      flower.appendChild(img);
+            
+      const startX = Math.random() * window.innerWidth;
+      flower.style.left = `${startX}px`;
+      
+      const duration = 8 + Math.random() * 8;
+      flower.style.animationDuration = `${duration}s`;
+      
+      const delay = Math.random() * 3;
+      flower.style.animationDelay = `${delay}s`;
+      
+      const windIntensity = 0.5 + Math.random() * 1;
+      flower.style.setProperty('--wind-intensity', windIntensity);
+      
+      const rotationSpeed = 2 + Math.random() * 4;
+      img.style.animationDuration = `${rotationSpeed}s`;
+      
+      document.body.appendChild(flower);
+      
+      setTimeout(() => {
+        flower.remove();
+      }, (duration + delay) * 1000);
+    };
+    
+    const interval = setInterval(createFlower, 1600);
+    
+    for (let i = 0; i < 3; i++) {
+      setTimeout(createFlower, i * 400);
+    }
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Falling snowflakes animation
+  useEffect(() => {
+    const createSnow = () => {
+      const snow = document.createElement('div');
+      snow.className = 'falling-snow';
+      
+      const img = document.createElement('img');
+      img.src = '/art/tuyet.png';
+      img.alt = 'Snowflake';
+      snow.appendChild(img);
+      
+      const startX = Math.random() * window.innerWidth;
+      snow.style.left = `${startX}px`;
+      
+      const duration = 10 + Math.random() * 10;
+      snow.style.animationDuration = `${duration}s`;
+      
+      const delay = Math.random() * 4;
+      snow.style.animationDelay = `${delay}s`;
+      
+      const rotationSpeed = 3 + Math.random() * 5;
+      img.style.animationDuration = `${rotationSpeed}s`;
+      
+      document.body.appendChild(snow);
+      
+      setTimeout(() => {
+        snow.remove();
+      }, (duration + delay) * 1000);
+    };
+    
+    const interval = setInterval(createSnow, 1200);
+    
+    for (let i = 0; i < 3; i++) {
+      setTimeout(createSnow, i * 300);
+    }
+    
+    return () => clearInterval(interval);
+  }, []);
+
   // Live clock info for side widgets
   useEffect(() => {
     const updateDateInfo = () => {
@@ -290,6 +374,7 @@ function App() {
       const period = hours24 >= 12 ? "PM" : "AM";
       const hours = hours24 % 12 || 12;
       const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
       const day = now.getDate();
       const month = now.getMonth() + 1;
       const monthLabel = formatLabel(now.toLocaleString("vi-VN", { month: "long" }));
@@ -298,6 +383,7 @@ function App() {
       setCurrentDateInfo({
         hours: hours.toString().padStart(2, "0"),
         minutes: minutes.toString().padStart(2, "0"),
+        seconds: seconds.toString().padStart(2, "0"),
         period,
         day: day.toString().padStart(2, "0"),
         month: month.toString().padStart(2, "0"),
@@ -515,16 +601,30 @@ function App() {
 
   // Swipe handlers
   const handleTouchStart = (e) => {
+    // Don't trigger swipe if touching interactive elements
+    const target = e.target;
+    if (target.closest('button') || 
+        target.closest('.progress-bar-container') || 
+        target.closest('.volume-slider') ||
+        target.closest('input')) {
+      touchStartX.current = null;
+      return;
+    }
+    
     touchStartX.current = e.targetTouches[0].clientX;
+    touchEndX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchMove = (e) => {
+    if (touchStartX.current === null) return;
     touchEndX.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchEnd = () => {
+    if (touchStartX.current === null) return;
+    
     const swipeDistance = touchStartX.current - touchEndX.current;
-    const minSwipeDistance = 50;
+    const minSwipeDistance = 80; // Increased from 50 to 80
 
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0) {
@@ -535,6 +635,10 @@ function App() {
         setActiveTab("music");
       }
     }
+    
+    // Reset
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   // Lunar calendar conversion - Vietnamese timezone
@@ -721,8 +825,12 @@ function App() {
       <div className="container">
         {/* Header */}
         <div className="header">
+          <div className="main-heading" data-testid="main-heading">{holidays[selectedHoliday].heading}</div>
           <h1 data-testid="main-title">{holidays[selectedHoliday].title}</h1>
           <p data-testid="subtitle">{holidays[selectedHoliday].subtitle}</p>
+          <div className="realtime-clock" data-testid="realtime-clock">
+            {currentDateInfo.hours}:{currentDateInfo.minutes}:{currentDateInfo.seconds} {currentDateInfo.period}
+          </div>
         </div>
 
         {/* Countdown */}

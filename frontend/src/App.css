@@ -269,6 +269,38 @@ body {
 /* Header */
 .header {
   margin-bottom: 32px;
+  position: relative;
+}
+
+.main-heading {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(255, 255, 255, 0.2);
+  animation: colorBlink 2s ease-in-out infinite;
+}
+
+@keyframes colorBlink {
+  0%, 100% {
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(255, 255, 255, 0.2);
+  }
+  25% {
+    color: #ff6b35;
+    text-shadow: 0 2px 12px rgba(255, 107, 53, 0.6), 0 4px 20px rgba(255, 107, 53, 0.4);
+  }
+  50% {
+    color: #ffd700;
+    text-shadow: 0 2px 12px rgba(255, 215, 0, 0.6), 0 4px 20px rgba(255, 215, 0, 0.4);
+  }
+  75% {
+    color: #f7931e;
+    text-shadow: 0 2px 12px rgba(247, 147, 30, 0.6), 0 4px 20px rgba(247, 147, 30, 0.4);
+  }
 }
 
 .header h1 {
@@ -283,6 +315,23 @@ body {
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
+}
+
+.realtime-clock {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.05em;
 }
 
 /* Countdown */
@@ -670,12 +719,22 @@ body {
     padding: 30px 20px;
   }
 
+  .main-heading {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
   .header h1 {
     font-size: 1.5rem;
   }
 
   .header p {
     font-size: 0.85rem;
+  }
+
+  .realtime-clock {
+    font-size: 1rem;
+    padding: 6px 12px;
   }
 
   .countdown {
@@ -727,8 +786,21 @@ body {
 }
 
 @media (max-width: 480px) {
+  .main-heading {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
   .header h1 {
     font-size: 1.3rem;
+  }
+
+  .realtime-clock {
+    position: static;
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.9rem;
+    padding: 6px 12px;
   }
 
   .app-layout {
@@ -996,16 +1068,202 @@ body {
     font-size: 1.1rem;
   }
 
+  .calendar-weekdays {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+
   .calendar-weekday {
-    font-size: 0.75rem;
-    padding: 6px 2px;
+    font-size: 0.7rem;
+    padding: 4px 2px;
+  }
+
+  .calendar-days {
+    gap: 3px;
+  }
+
+  .calendar-day {
+    padding: 2px;
+    gap: 1px;
+    border-radius: 6px;
   }
 
   .solar-date {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .lunar-date {
-    font-size: 0.6rem;
+    font-size: 0.52rem;
+  }
+
+  .calendar-day.tet-day::before {
+    font-size: 0.85rem;
+    top: -5px;
+    right: -5px;
+  }
+
+  .calendar-day.tet-day .solar-date {
+    font-size: 0.9rem;
+  }
+
+  .calendar-day.tet-day .lunar-date {
+    font-size: 0.52rem;
+  }
+
+  .calendar-day.tet-period {
+    border-width: 1px;
+  }
+
+  .calendar-day.tet-day {
+    border-width: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-header h3 {
+    font-size: 0.95rem;
+  }
+
+  .calendar-weekdays {
+    gap: 2px;
+    margin-bottom: 4px;
+  }
+
+  .calendar-weekday {
+    font-size: 0.65rem;
+    padding: 3px 1px;
+  }
+
+  .calendar-days {
+    gap: 2px;
+  }
+
+  .calendar-day {
+    padding: 1px;
+    border-radius: 4px;
+  }
+
+  .solar-date {
+    font-size: 0.7rem;
+  }
+
+  .lunar-date {
+    font-size: 0.48rem;
+  }
+
+  .calendar-day.tet-day::before {
+    font-size: 0.75rem;
+    top: -3px;
+    right: -3px;
+  }
+
+  .calendar-day.tet-day .solar-date {
+    font-size: 0.8rem;
+  }
+
+  .calendar-day.tet-day .lunar-date {
+    font-size: 0.48rem;
+  }
+
+  .calendar-day.tet-period {
+    border-width: 1px;
+  }
+
+  .calendar-day.tet-day {
+    border-width: 1.5px;
+  }
+}
+
+/* Falling peach blossoms animation */
+.falling-flower {
+  position: fixed;
+  top: -100px;
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
+  z-index: 999;
+  animation: fall-with-wind linear infinite;
+  opacity: 0.8;
+}
+
+.falling-flower img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(0.5);
+  animation: rotate-flower 3s linear infinite;
+}
+
+/* Falling snowflakes animation */
+.falling-snow {
+  position: fixed;
+  top: -100px;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 998;
+  animation: fall-snow linear infinite;
+  opacity: 0.9;
+}
+
+.falling-snow img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(0.5);
+  animation: rotate-snow 4s linear infinite;
+}
+
+@keyframes fall-with-wind {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(25vh) translateX(30px);
+  }
+  50% {
+    transform: translateY(50vh) translateX(-20px);
+  }
+  75% {
+    transform: translateY(75vh) translateX(40px);
+  }
+  100% {
+    transform: translateY(100vh) translateX(-10px);
+  }
+}
+
+@keyframes rotate-flower {
+  from {
+    transform: scale(0.5) rotate(0deg);
+  }
+  to {
+    transform: scale(0.5) rotate(360deg);
+  }
+}
+
+@keyframes fall-snow {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(25vh) translateX(-15px);
+  }
+  50% {
+    transform: translateY(50vh) translateX(25px);
+  }
+  75% {
+    transform: translateY(75vh) translateX(-30px);
+  }
+  100% {
+    transform: translateY(100vh) translateX(10px);
+  }
+}
+
+@keyframes rotate-snow {
+  from {
+    transform: scale(0.5) rotate(0deg);
+  }
+  to {
+    transform: scale(0.5) rotate(360deg);
   }
 }
