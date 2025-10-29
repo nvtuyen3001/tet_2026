@@ -21,8 +21,8 @@ const holidays = {
     name: "Tết Âm Lịch",
     date: "2026-02-17T00:00:00",
     heading: "Happy New Year CountDown",
-    title: "🌸 Tết đang đến rất gần!",
-    subtitle: "Hãy cùng đếm ngược tới khoảnh khắc giao thừa năm mới.",
+    title: "🌸 Tết đang đến rất gần, mang theo niềm vui và hy vọng mới.",
+    subtitle: "Cùng nhau đếm ngược để chào đón khoảnh khắc giao thừa thiêng liêng!",
     type: "lunar-new-year",
     bgClass: "lunar-new-year"
   },
@@ -1051,7 +1051,7 @@ function App() {
 
         {/* Footer */}
         <div className="footer" data-testid="footer">
-          <p>© 2025 VTuyen.</p>
+          <p>neyuT_03 🇻🇳</p>
         </div>
       </div>
     </div>
