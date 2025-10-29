@@ -21,7 +21,7 @@ const holidays = {
     name: "Tết Âm Lịch",
     date: "2026-02-17T00:00:00",
     heading: "Happy New Year CountDown",
-    title: "🌸 Tết đang đến rất gần, mang theo niềm vui và hy vọng mới.",
+    title: "🌸Tết kề bên!",
     subtitle: "Cùng nhau đếm ngược để chào đón khoảnh khắc giao thừa thiêng liêng!",
     type: "lunar-new-year",
     bgClass: "lunar-new-year"
