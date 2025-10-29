@@ -244,6 +244,7 @@ function App() {
     monthLabel: "Tháng 01",
     weekday: "Thứ hai"
   });
+  // eslint-disable-next-line no-unused-vars
   const [userInfo, setUserInfo] = useState({ ip: "Loading...", isp: "Loading..." });
   const [currentTrack, setCurrentTrack] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
