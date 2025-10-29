@@ -1052,9 +1052,6 @@ function App() {
         {/* Footer */}
         <div className="footer" data-testid="footer">
           <p>© 2025 VTuyen.</p>
-          <p data-testid="ip-info">
-            IP: {userInfo.ip} | ISP: {userInfo.isp}
-          </p>
         </div>
       </div>
     </div>
