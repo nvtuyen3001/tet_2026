@@ -319,7 +319,7 @@ body {
 
 .realtime-clock {
   position: absolute;
-  top: 70px;
+  top: 60px;
   right: 0;
   font-size: 1.2rem;
   font-weight: 600;
@@ -328,6 +328,7 @@ body {
   padding: 8px 16px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);

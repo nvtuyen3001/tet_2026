@@ -12,7 +12,7 @@ const holidays = {
     name: "Tết Dương Lịch",
     date: "2026-01-01T00:00:00",
     heading: "Happy New Year CountDown",
-    title: "🎉 Năm Mới đang đến rất gần!",
+    title: "🎉 Năm Mới đang đến gần!",
     subtitle: "Hãy cùng đếm ngược tới khoảnh khắc giao thừa năm mới.",
     type: "solar-new-year",
     bgClass: "solar-new-year"
@@ -29,7 +29,8 @@ const holidays = {
   christmas: {
     name: "Noel",
     date: "2025-12-25T00:00:00",
-    title: "🎄 Giáng Sinh đang đến rất gần!",
+    heading: "Christmas CountDown",
+    title: "🎄 Giáng Sinh đang đến gần!",
     subtitle: "Hãy cùng đếm ngược tới đêm Noel đầm ấm.",
     type: "christmas",
     bgClass: "christmas"
