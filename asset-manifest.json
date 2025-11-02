@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/tet_2026/static/css/main.3f17aaaa.css",
+    "main.js": "/tet_2026/static/js/main.85b9297a.js",
+    "static/media/background_tet.png": "/tet_2026/static/media/background_tet.e44731e295865da4ecf1.png",
+    "static/media/background_tet2.jpg": "/tet_2026/static/media/background_tet2.f434ecc558c54e29e596.jpg",
+    "static/media/background_noel.jpg": "/tet_2026/static/media/background_noel.f6a0b9bfa43a9c842088.jpg",
+    "index.html": "/tet_2026/index.html",
+    "main.3f17aaaa.css.map": "/tet_2026/static/css/main.3f17aaaa.css.map",
+    "main.85b9297a.js.map": "/tet_2026/static/js/main.85b9297a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3f17aaaa.css",
+    "static/js/main.85b9297a.js"
+  ]
+}
