@@ -1,0 +1,17 @@
+.random-gif {
+  position: fixed;
+  left: clamp(12px, 3vw, 48px);
+  bottom: 24px;
+  width: clamp(100px, 16vw, 220px);
+  height: clamp(100px, 20vh, 220px);
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 5;
+}
+.calendar-header h3 { font-size: 17px; }
+.calendar-content { max-height: 65vh; overflow-y: auto; }
+@media (max-width: 600px) {
+  .random-gif { width: 72px; height: 72px; left: 8px; bottom: 12px; }
+  .calendar-header h3 { font-size: 14px; }
+  .calendar-day .solar-date { font-size: 16px; }
+}

@@ -1,0 +1,63 @@
+/* Expanded artwork and waveform style for the music player. */
+.music-player .player-header {
+  display: grid;
+  grid-template-columns: minmax(112px, 38%) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 28px);
+  align-items: center;
+  margin-bottom: 22px;
+}
+.music-player .album-art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px #16090055;
+}
+.music-player .track-info { min-width: 0; }
+.music-player .track-title {
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  margin-bottom: 8px;
+}
+.music-player .track-artist { font-size: clamp(.95rem, 1.6vw, 1.15rem); }
+.music-player .progress-section { margin: 0 0 18px; }
+.music-player .time-display {
+  justify-content: flex-start;
+  font-size: .75rem;
+  margin: 0 0 5px;
+}
+.music-player .progress-bar-container {
+  height: 48px;
+  background: transparent;
+  border-radius: 0;
+}
+.music-player .progress-bar-container:hover { height: 48px; }
+.music-player .progress-bar {
+  height: 100%;
+  overflow: visible;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='48' viewBox='0 0 640 48'%3E%3Cg fill='%23f8e9d9' opacity='.78'%3E%3Crect x='2' y='21' width='4' height='6' rx='2'/%3E%3Crect x='12' y='17' width='4' height='14' rx='2'/%3E%3Crect x='22' y='19' width='4' height='10' rx='2'/%3E%3Crect x='32' y='13' width='4' height='22' rx='2'/%3E%3Crect x='42' y='18' width='4' height='12' rx='2'/%3E%3Crect x='52' y='8' width='4' height='32' rx='2'/%3E%3Crect x='62' y='15' width='4' height='18' rx='2'/%3E%3Crect x='72' y='20' width='4' height='8' rx='2'/%3E%3Crect x='82' y='14' width='4' height='20' rx='2'/%3E%3Crect x='92' y='18' width='4' height='12' rx='2'/%3E%3Crect x='102' y='6' width='4' height='36' rx='2'/%3E%3Crect x='112' y='16' width='4' height='16' rx='2'/%3E%3Crect x='122' y='20' width='4' height='8' rx='2'/%3E%3Crect x='132' y='13' width='4' height='22' rx='2'/%3E%3Crect x='142' y='17' width='4' height='14' rx='2'/%3E%3Crect x='152' y='9' width='4' height='30' rx='2'/%3E%3Crect x='162' y='18' width='4' height='12' rx='2'/%3E%3Crect x='172' y='21' width='4' height='6' rx='2'/%3E%3Crect x='182' y='14' width='4' height='20' rx='2'/%3E%3Crect x='192' y='18' width='4' height='12' rx='2'/%3E%3Crect x='202' y='5' width='4' height='38' rx='2'/%3E%3Crect x='212' y='15' width='4' height='18' rx='2'/%3E%3Crect x='222' y='19' width='4' height='10' rx='2'/%3E%3Crect x='232' y='12' width='4' height='24' rx='2'/%3E%3Crect x='242' y='17' width='4' height='14' rx='2'/%3E%3Crect x='252' y='8' width='4' height='32' rx='2'/%3E%3Crect x='262' y='18' width='4' height='12' rx='2'/%3E%3Crect x='272' y='21' width='4' height='6' rx='2'/%3E%3Crect x='282' y='14' width='4' height='20' rx='2'/%3E%3Crect x='292' y='17' width='4' height='14' rx='2'/%3E%3Crect x='302' y='6' width='4' height='36' rx='2'/%3E%3Crect x='312' y='16' width='4' height='16' rx='2'/%3E%3Crect x='322' y='20' width='4' height='8' rx='2'/%3E%3Crect x='332' y='12' width='4' height='24' rx='2'/%3E%3Crect x='342' y='18' width='4' height='12' rx='2'/%3E%3Crect x='352' y='8' width='4' height='32' rx='2'/%3E%3Crect x='362' y='16' width='4' height='16' rx='2'/%3E%3Crect x='372' y='21' width='4' height='6' rx='2'/%3E%3Crect x='382' y='14' width='4' height='20' rx='2'/%3E%3Crect x='392' y='18' width='4' height='12' rx='2'/%3E%3Crect x='402' y='5' width='4' height='38' rx='2'/%3E%3Crect x='412' y='15' width='4' height='18' rx='2'/%3E%3Crect x='422' y='19' width='4' height='10' rx='2'/%3E%3Crect x='432' y='12' width='4' height='24' rx='2'/%3E%3Crect x='442' y='18' width='4' height='12' rx='2'/%3E%3Crect x='452' y='8' width='4' height='32' rx='2'/%3E%3Crect x='462' y='16' width='4' height='16' rx='2'/%3E%3Crect x='472' y='20' width='4' height='8' rx='2'/%3E%3Crect x='482' y='13' width='4' height='22' rx='2'/%3E%3Crect x='492' y='18' width='4' height='12' rx='2'/%3E%3Crect x='502' y='6' width='4' height='36' rx='2'/%3E%3Crect x='512' y='16' width='4' height='16' rx='2'/%3E%3Crect x='522' y='20' width='4' height='8' rx='2'/%3E%3Crect x='532' y='12' width='4' height='24' rx='2'/%3E%3Crect x='542' y='17' width='4' height='14' rx='2'/%3E%3Crect x='552' y='8' width='4' height='32' rx='2'/%3E%3Crect x='562' y='18' width='4' height='12' rx='2'/%3E%3Crect x='572' y='21' width='4' height='6' rx='2'/%3E%3Crect x='582' y='14' width='4' height='20' rx='2'/%3E%3Crect x='592' y='17' width='4' height='14' rx='2'/%3E%3Crect x='602' y='5' width='4' height='38' rx='2'/%3E%3Crect x='612' y='15' width='4' height='18' rx='2'/%3E%3Crect x='622' y='19' width='4' height='10' rx='2'/%3E%3Crect x='632' y='16' width='4' height='16' rx='2'/%3E%3C/g%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.music-player .progress-fill {
+  position: absolute;
+  top: calc(50% - 2px);
+  height: 4px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #ff6b35, #ffc04b);
+  box-shadow: 0 0 12px #ff9b43aa;
+}
+.music-player .progress-thumb { z-index: 1; }
+.music-player .controls { gap: clamp(10px, 2.4vw, 22px); }
+.music-player .control-btn { background: #fff1; }
+.music-player .control-btn.play-btn { background: linear-gradient(135deg,#ff6b35,#f7931e); }
+.music-player .favorite-btn { font-size: 1.35rem; line-height: 1; }
+.music-player .favorite-btn[aria-pressed="true"] { color: #ff647d; background: #ff647d22; }
+@media (max-width: 520px) {
+  .music-player { padding: 14px; }
+  .music-player .player-header { grid-template-columns: minmax(96px, 35%) minmax(0, 1fr); gap: 14px; }
+  .music-player .album-art { border-radius: 14px; }
+  .music-player .progress-bar-container, .music-player .progress-bar-container:hover { height: 38px; }
+  .music-player .controls { gap: 8px; }
+  .music-player .control-btn { width: 38px; height: 38px; }
+  .music-player .control-btn.play-btn { width: 48px; height: 48px; }
+}

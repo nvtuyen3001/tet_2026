@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.3f17aaaa.css",
+    "main.js": "/static/js/main.tet2027.js",
+    "static/media/background_tet.png": "/static/media/background_tet.e44731e295865da4ecf1.png",
+    "static/media/background_tet2.jpg": "/static/media/background_tet2.f434ecc558c54e29e596.jpg",
+    "static/media/background_noel.jpg": "/static/media/background_noel.f6a0b9bfa43a9c842088.jpg",
+    "index.html": "/index.html",
+    "main.3f17aaaa.css.map": "/static/css/main.3f17aaaa.css.map",
+    "main.85b9297a.js.map": "/static/js/main.85b9297a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3f17aaaa.css",
+    "static/js/main.tet2027.js"
+  ]
+}
